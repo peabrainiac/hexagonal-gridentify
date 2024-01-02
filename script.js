@@ -3,7 +3,7 @@ queueMicrotask(()=>{
 	const container = document.getElementById("container");
 	const tiles = generateGrid(N);
 	tiles.forEach(tile=>{
-		tile.value = 1+Math.floor(3*Math.random());
+		tile.value = [1,2,3][Math.floor(3*Math.random())];
 		container.appendChild(tile);
 	});
 
@@ -25,7 +25,7 @@ queueMicrotask(()=>{
 		document.addEventListener("mouseup",()=>{
 			if (new Set(selectedTiles.map(tile=>tile.value)).size==1){
 				selectedTiles[selectedTiles.length-1].value *= selectedTiles.length;
-				selectedTiles.slice(0,-1).forEach(tile=>{tile.value=1+Math.floor(3*Math.random());});
+				selectedTiles.slice(0,-1).forEach(tile=>{tile.value=[1,2,3][Math.floor(3*Math.random())];});
 			}
 			selectedTiles.forEach(tile=>{tile.selected=false;});
 			selectedTiles = [];
@@ -63,6 +63,21 @@ class HexagonalTile extends HTMLElement {
 					clip-path: polygon(${[0,1,2,3,4,5].map(i=>[0,1,2,3,4,5].map(j=>`${50+50*(0.925*Math.cos((i+0.5)*Math.PI/3)+0.075*Math.cos((i+(j-2.5)/5+0.5)*Math.PI/3))}% ${50+50*(0.925*Math.sin((i+0.5)*Math.PI/3)+0.075*Math.sin((i+(j-2.5)/5+0.5)*Math.PI/3))}%`)).flat().join(", ")});
 					pointer-events: auto;
 				}
+				:host([data-value]) #tile {
+					background: #cd9bff;
+				}
+				:host([data-value="1"]) #tile {
+					background: #cdebff;
+				}
+				:host([data-value="2"]) #tile {
+					background: #cdd7ff;
+				}
+				:host([data-value="3"]) #tile {
+					background: #cdc3ff;
+				}
+				:host([data-value="4"]) #tile {
+					background: #cdafff;
+				}
 				:host(.selected) #tile {
 					background-color: #ff0000 !important;
 				}
@@ -76,6 +91,29 @@ class HexagonalTile extends HTMLElement {
 				span {
 					font-size: min(10vw,11.55vh);
 					pointer-events: none;
+				}
+				@media (prefers-color-scheme: dark) {
+					span {
+						color: white;
+					}
+					:host([data-value]) #tile {
+						background: #dfa020;
+					}
+					:host([data-value="1"]) #tile {
+						background: #383838;
+					}
+					:host([data-value="2"]) #tile {
+						background: #605c54;
+					}
+					:host([data-value="3"]) #tile {
+						background: #7c7064;
+					}
+					:host([data-value="4"]) #tile, :host([data-value="5"]) #tile {
+						background: #a08050;
+					}
+					:host([data-value="6"]) #tile {
+						background: #bf9040;
+					}
 				}
 			</style>
 			<div id="tile">
@@ -97,7 +135,7 @@ class HexagonalTile extends HTMLElement {
 	set value(value){
 		this._value = value;
 		this._span.innerText = value;
-		this.shadowRoot.querySelector("#tile").style.background = value==1?"#cdebff":value==2?"#cdd7ff":value==3?"#cdc3ff":value==4?"#cdafff":"#cd9bff";
+		this.setAttribute("data-value",value);
 	}
 
 	/** @readonly */

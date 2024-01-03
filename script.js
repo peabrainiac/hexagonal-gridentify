@@ -10,23 +10,29 @@ queueMicrotask(()=>{
 	/** @type {HexagonalTile[]} */
 	let selectedTiles = [];
 	tiles.forEach(tile=>{
-		tile.addEventListener("mousedown",e=>{
-			selectedTiles = [tile];
-			tile.selected = true;
+		tile.addEventListener("pointerdown",e=>{
+			if (!selectedTiles.length) {
+				selectedTiles = [tile];
+				tile.selected = true;
+			}
 			e.preventDefault();
 		});
-		tile.addEventListener("mouseenter",e=>{
+		tile.addEventListener("pointerenter",()=>{
 			if (selectedTiles.length&&selectedTiles[selectedTiles.length-1].neighbours.includes(tile)&&selectedTiles[selectedTiles.length-1].value==tile.value){
 				selectedTiles.push(tile);
 				selectedTiles.splice(selectedTiles.indexOf(tile)+1).forEach(tile=>{tile.selected=false;});
 				tile.selected = true;
 			}
 		});
-		document.addEventListener("mouseup",()=>{
+		document.addEventListener("pointerup",()=>{
 			if (new Set(selectedTiles.map(tile=>tile.value)).size==1){
 				selectedTiles[selectedTiles.length-1].value *= selectedTiles.length;
 				selectedTiles.slice(0,-1).forEach(tile=>{tile.value=[1,2,3][Math.floor(3*Math.random())];});
 			}
+			selectedTiles.forEach(tile=>{tile.selected=false;});
+			selectedTiles = [];
+		});
+		document.addEventListener("pointercancel",()=>{
 			selectedTiles.forEach(tile=>{tile.selected=false;});
 			selectedTiles = [];
 		});
@@ -159,9 +165,13 @@ class HexagonalTile extends HTMLElement {
 		this._value = 0;
 		/** @type {HexagonalTile} */
 		this._neighbours = [];
+		this._tile = this.shadowRoot.getElementById("tile");
 		this._span = this.shadowRoot.querySelector("span");
 		this._x = x;
 		this._y = y;
+		this._tile.addEventListener("pointerdown",e=>{
+			this._tile.releasePointerCapture(e.pointerId);
+		});
 	}
 
 	get value(){

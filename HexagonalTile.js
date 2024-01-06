@@ -10,7 +10,7 @@ export default class HexagonalTile extends HTMLElement {
 					height: ${50/((N+0.25)*Math.sqrt(3)/2)}%;
 					position: absolute;
 					left: ${50+50*x/(N+0.25)}%;
-					top: ${50-50*y/((N+0.25)*Math.sqrt(3)/2)}%;
+					top: ${55-50*y/((N+0.25)*Math.sqrt(3)/2)}%;
 					transform: translate(-50%,-50%);
 					pointer-events: none;
 				}
@@ -48,20 +48,20 @@ export default class HexagonalTile extends HTMLElement {
 					transform: translate(-50%,-50%);
 				}
 				span {
-					font-size: min(10vw,11.55vh);
+					font-size: 100%;
 					pointer-events: none;
 				}
 				:host(.tile-e1) span {
-					font-size: min(9.5vw,10.973vh);
+					font-size: 95%;
 				}
 				:host(.tile-e2) span {
-					font-size: min(7.5vw,8.663vh);
+					font-size: 75%;
 				}
 				:host(.tile-e3) span {
-					font-size: min(6vw,6.93vh);
+					font-size: 60%;
 				}
 				:host(.tile-e4) span {
-					font-size: min(5.2vw,6.006vh);
+					font-size: 52%;
 				}
 				@media (prefers-color-scheme: dark) {
 					span {

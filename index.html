@@ -23,7 +23,19 @@
 				left: 50%;
 				top: 50%;
 				transform: translate(-50%,-50%);
+				font-size: min(10vw,11.55vh);
 				touch-action: none;
+			}
+			#header {
+				position: absolute;
+				left: 50%;
+				top: 6.5%;
+				transform: translate(-50%,-50%);
+				font-size: 75%;
+				color: #000000bf;
+			}
+			#score {
+				color: #000000;
 			}
 			#footer {
 				position: absolute;
@@ -48,6 +60,12 @@
 				body {
 					background: #101010;
 				}
+				#header {
+					color: #dfdfdfbf;
+				}
+				#score {
+					color: #ffaf00;
+				}
 				#footer {
 					color: #dfdfdf;
 				}
@@ -62,6 +80,9 @@
 	</head>
 	<body>
 		<div id="container">
+			<div id="header">
+				Score: <span id="score"></span>
+			</div>
 		</div>
 		<span id="footer">
 			Made by <a href="https://github.com/peabrainiac">peabrainiac</a>, based on <a href="https://gridentify.com/">gridentify</a> by <a href="https://three.consulting/">Three Point Consulting</a>. &copy;2023

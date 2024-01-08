@@ -50,6 +50,7 @@ export default class HexagonalTile extends HTMLElement {
 				span {
 					font-size: 100%;
 					pointer-events: none;
+					user-select: none;
 				}
 				:host(.tile-e1) span {
 					font-size: 95%;

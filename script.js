@@ -3,9 +3,11 @@ import HexagonalTile from "./HexagonalTile.js";
 queueMicrotask(()=>{
 	const N = 3;
 	const container = document.getElementById("container");
+	const board = document.getElementById("board");
+	const retryButton = document.getElementById("retry-button");
 	const scoreSpan = document.getElementById("score");
 	const tiles = generateGrid(N);
-	tiles.forEach(tile=>container.appendChild(tile));
+	tiles.forEach(tile=>board.appendChild(tile));
 
 	let data = loadGameData()||{score: 0, board: Array.from({length:tiles.length},()=>[1,2,3][Math.floor(3*Math.random())])};
 	let score = data.score;
@@ -13,6 +15,8 @@ queueMicrotask(()=>{
 		tile.value = data.board[i];
 	});
 	scoreSpan.innerText = score;
+
+	checkForGameOver();
 
 	/** @type {HexagonalTile[]} */
 	let selectedTiles = [];
@@ -38,6 +42,7 @@ queueMicrotask(()=>{
 				score += selectedTiles[selectedTiles.length-1].value*(selectedTiles.length-1);
 				scoreSpan.innerText = score;
 				localStorage.hexagonalGridentify = JSON.stringify({score, board: tiles.map(tile=>tile.value)});
+				checkForGameOver();
 			}
 			selectedTiles.forEach(tile=>{tile.selected=false;});
 			selectedTiles = [];
@@ -58,6 +63,23 @@ queueMicrotask(()=>{
 				tile.value = data.board[i];
 			});
 			scoreSpan.innerText = score;
+			checkForGameOver();
+		}
+	});
+
+	function checkForGameOver(){
+		container.classList.toggle("game-over",tiles.every(tile=>tile.neighbours.every(neighbour=>tile.value!=neighbour.value)));
+	}
+
+	retryButton.addEventListener("click",()=>{
+		retryButton.blur();
+		if (container.classList.contains("game-over")){
+			container.classList.remove("game-over");
+			tiles.forEach(tile=>{tile.value=[1,2,3][Math.floor(3*Math.random())];});
+			score = 0;
+			scoreSpan.innerText = score;
+			localStorage.hexagonalGridentify = JSON.stringify({score, board: tiles.map(tile=>tile.value)});
+			checkForGameOver();
 		}
 	});
 
@@ -66,6 +88,7 @@ queueMicrotask(()=>{
 		tiles.forEach(tile=>tile.neighbours.push(...tiles.filter(tile2=>tile2!==tile&&Math.hypot(tile.x-tile2.x,tile.y-tile2.y)<1.1)));
 		return tiles;
 	}
+
 	/** @return {{score: number, board: number[]}} */
 	function loadGameData(){
 		try {
